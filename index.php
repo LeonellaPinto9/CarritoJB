@@ -103,6 +103,69 @@
         </div>
     </div>
     <!-- Topbar End -->
+    <?php
+    require 'config/db_connect.php';
+    
+    function getSectionName($id_section) {
+        global $conexion;  // Asumiendo que $conexion es tu conexión a la base de datos
+        
+        try {
+            $stmt = $conexion->prepare("SELECT name FROM sections WHERE id = :id_section");
+            $stmt->bindParam(':id_section', $id_section, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result) {
+                return $result['name'];
+            } else {
+                return "Sección Desconocida";
+            }
+        } catch (PDOException $e) {
+            // Manejo de errores
+            error_log("Error al obtener el nombre de la sección: " . $e->getMessage());
+            return "Error al obtener la sección";
+        }
+    }
+    
+
+    try {
+        // Consulta de productos
+        $sql = "SELECT p.*, pi.* FROM products p INNER JOIN product_images pi ON p.id = pi.id_product";
+        $stmt = $conexion->query($sql);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Consulta de etiquetas
+        $sql_labels = "SELECT * FROM labels ORDER BY name";
+        $stmt_labels = $conexion->query($sql_labels);
+        $labels = $stmt_labels->fetchAll(PDO::FETCH_ASSOC);
+
+        // Consulta de categorías activas
+        $sql_categories = "SELECT * FROM categories WHERE status = 1 ORDER BY name";
+        $stmt_categories = $conexion->query($sql_categories);
+        $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
+
+        // Consulta de subcategorías activas
+        $sql_subcategories = "SELECT * FROM subcategories WHERE status = 1 ORDER BY id_category, name";
+        $stmt_subcategories = $conexion->query($sql_subcategories);
+        $subcategories = $stmt_subcategories->fetchAll(PDO::FETCH_ASSOC);
+
+        // Organizar categorías y subcategorías
+        $categoriesOrganized = [];
+        foreach ($categories as $category) {
+            $categoriesOrganized[$category['id']] = $category;
+            $categoriesOrganized[$category['id']]['subcategories'] = [];
+        }
+
+        foreach ($subcategories as $subcategory) {
+            if (isset($categoriesOrganized[$subcategory['id_category']])) {
+                $categoriesOrganized[$subcategory['id_category']]['subcategories'][] = $subcategory;
+            }
+        }
+    } catch (PDOException $e) {
+        die("Error en la consulta: " . $e->getMessage());
+    }
+    ?>
 
 
     <!-- Navbar Start -->
@@ -207,6 +270,20 @@
                         <?php endforeach; ?>
                     </form>
                 </div> 
+
+
+
+                <!-- ETIQUETAS -->
+<div class="border-bottom mb-4 pb-4">
+    <h5 class="font-weight-semi-bold mb-4">ETIQUETAS</h5>
+    <div>
+        <?php foreach ($labels as $label): ?>
+            <a href="#" class="btn mb-1 mr-1" data-label-id="<?= htmlspecialchars($label['id']) ?>" style="background-color: <?= htmlspecialchars($label['color']) ?>; color: #fff;">
+                <?= htmlspecialchars($label['name']) ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</div>
                 <!-- Categorias End -->
 
                  
@@ -290,72 +367,7 @@
 
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
-        <div class="row px-xl-5 pt-5">
-            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                <a href="" class="text-decoration-none">
-                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">Soluciones</span>Integrales</h1>
-                </a>
-                <p>Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.</p>
-                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
-            </div>
-            <div class="col-lg-8 col-md-12">
-                <div class="row">
-                    <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-                        <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-                        <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
-                        <form action="">
-                            <div class="form-group">
-                                <input type="text" class="form-control border-0 py-4" placeholder="Your Name" required="required" />
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control border-0 py-4" placeholder="Your Email"
-                                    required="required" />
-                            </div>
-                            <div>
-                                <button class="btn btn-primary btn-block border-0 py-3" type="submit">Subscribe Now</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row border-top border-light mx-xl-5 py-4">
-            <div class="col-md-6 px-xl-0">
-                <p class="mb-md-0 text-center text-md-left text-dark">
-                    &copy; <a class="text-dark font-weight-semi-bold" href="#">Your Site Name</a>. All Rights Reserved. Designed
-                    by
-                    <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">HTML Codex</a>
-                </p>
-            </div>
-            <div class="col-md-6 px-xl-0 text-center text-md-right">
-                <img class="img-fluid" src="img/payments.png" alt="">
-            </div>
-        </div>
-    </div>
+    <?php include('footer.html'); ?>
     <!-- Footer End -->
 
     <!-- Modal Detalles Producto -->
@@ -378,6 +390,94 @@
         </div>
     </div>
     <!-- Modal Detalles Producto End -->
+
+    <!--FILTRADO DE PRODUCTOS -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Escuchar clics en categorías y subcategorías de forma dinámica
+        document.querySelector('.border-bottom').addEventListener('click', function(e) {
+            // Prevenir el comportamiento por defecto de los enlaces
+            e.preventDefault();
+
+            // Verificar si el elemento tiene un data-category-id o data-subcategory-id
+            var categoryId = e.target.getAttribute('data-category-id');
+            var subcategoryId = e.target.getAttribute('data-subcategory-id');
+
+            if (categoryId) {
+                // Filtrar por categoría
+                filterProducts('category', categoryId);
+            } else if (subcategoryId) {
+                // Filtrar por subcategoría
+                filterProducts('subcategory', subcategoryId);
+            }
+        });
+
+        // Función para realizar la solicitud y actualizar los productos
+        function filterProducts(type, id) {
+            fetch(`filter-products.php?type=${type}&id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);  // Verificar qué datos llegan del servidor
+                    if (data.error) {
+                        console.error('Error en el servidor:', data.error);
+                        return;
+                    }
+                    if (!Array.isArray(data)) {
+                        console.error('Los datos no son un arreglo válido');
+                        return;
+                    }
+                    updateProductList(data); // Actualizar la lista de productos
+                })
+                .catch(error => {
+                    console.error('Error al filtrar productos:', error);
+                });
+        }
+
+        // Función para actualizar la lista de productos en el DOM
+        function updateProductList(products) {
+            var productContainer = document.getElementById('product-container');
+            if (!productContainer) {
+                console.error('Contenedor de productos no encontrado');
+                return;
+            }
+            
+            if (products.length === 0) {
+                productContainer.innerHTML = '<div class="col-12"><p>No se encontraron productos.</p></div>';
+                return;
+            }
+
+            // Generar el HTML de los productos
+            var productsHtml = products.map(product => `
+                <div class="col-lg-4 col-md-6 col-sm-12 pb-1 product-item"
+                    data-category-id="${product.category_id || ''}"
+                    data-subcategory-id="${product.subcategory_id || ''}">
+                    <div class="card product-item border-0 mb-4">
+                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" src="${product.image_url || ''}" alt="${product.name || ''}">
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3">${product.name || ''}</h6>
+                            <div class="d-flex justify-content-center">
+                                <h6>$${Number(product.price || 0).toFixed(2)}</h6>
+                                ${product.original_price ? `<h6 class="text-muted ml-2"><del>$${Number(product.original_price).toFixed(2)}</del></h6>` : ''}
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between bg-light border">
+                            <a class="btn btn-sm text-dark p-0 view-detail-btn" data-product-id="${product.id_product || ''}">
+                                <i class="fas fa-eye text-primary mr-1"></i>View Detail
+                            </a>
+                            <a href="#" class="btn btn-sm text-dark p-0 add-to-cart" data-product-id="${product.id || ''}">
+                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            productContainer.innerHTML = productsHtml; // Reemplazar el HTML con los nuevos productos
+        }
+    });
+</script>
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
