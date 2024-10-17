@@ -23,6 +23,9 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- ICONO DE LA PAGINA WEB -->
+    <link rel="icon" href="img/Logo-SolucionesWeb.svg">
 </head>
 <style>
     .product-item {
