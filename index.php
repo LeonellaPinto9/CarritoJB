@@ -26,22 +26,11 @@
 
     <!-- ICONO DE LA PAGINA WEB -->
     <link rel="icon" href="img/Logo-SolucionesWeb.svg">
+
+    <!-- CSS -->
+    <link href="css/product-item-img.css" rel="stylesheet">
 </head>
-<style>
-    .product-item {
-    height: 400px; /* Ajusta la altura según tus necesidades */
-}
-
-.product-img img {
-    height: 200px; /* Ajusta la altura según tus necesidades */
-    width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
-    object-fit: contain; /* La imagen se adapta al contenedor sin recortarse */
-}
-.card-body {
-    height: 150px; /* Asegura que el cuerpo de la tarjeta tenga una altura constante */
-}
-</style>
-
+    
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
