@@ -19,16 +19,16 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
 
     <!-- ICONO DE LA PAGINA WEB -->
-    <link rel="icon" href="img/Logo-SolucionesWeb.svg">
+    <link rel="icon" href="assets/img/Logo-SolucionesWeb.svg">
 
     <!-- CSS -->
-    <link href="css/product-item-img.css" rel="stylesheet">
+    <link href="assets/css/product-item-img.css" rel="stylesheet">
 </head>
 
 <body>
@@ -70,7 +70,7 @@
                     <h1 class="m-0 display-5 font-weight-semi-bold"><span
                             class="text-primary font-weight-bold border px-3 mr-1">
                             <!-- IMAGEN DEL LOGO DE SOLUCIONES INTEGRALES JB -->
-                            <img src="img/Logo-SolucionesWeb.svg" alt="" style="width:45px; height:45px;"></span>JB S.A.C.</h1>
+                            <img src="assets/img/Logo-SolucionesWeb.svg" alt="" style="width:45px; height:45px;"></span>JB S.A.C.</h1>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
@@ -99,10 +99,10 @@
     </div>
 
     <!-- Topbar End -->
-    <?php include('Model/topbar-end.php'); ?>
+    <?php include('models/topbar-end.php'); ?>
 
     <!-- Navbar Start -->
-    <?php include('Model/navbar-star.php'); ?>
+    <?php include('models/navbar-star.php'); ?>
 
     <div class="container-fluid">
         <div class="row border-top px-xl-5">
@@ -246,7 +246,7 @@
 
 
     <!-- Footer Start -->
-    <?php include('footer.html'); ?>
+    <?php include('views/footer.html'); ?>
     <!-- Footer End -->
 
     <!-- Modal Detalles Producto -->
@@ -271,7 +271,7 @@
     <!-- Modal Detalles Producto End -->
 
     <!--FILTRADO DE PRODUCTOS -->
-    <script src="js/productos.js"></script>
+    <script src="assets/js/productos.js"></script>
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
@@ -283,14 +283,14 @@
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
+    <script src="assets/mail/jqBootstrapValidation.min.js"></script>
+    <script src="assets/mail/contact.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="assets/js/main.js"></script>
 
     <!-- JS -->
-    <script src="js/index.js"></script>
+    <script src="assets/js/index.js"></script>
 </body>
 
 </html>
