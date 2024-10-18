@@ -27,6 +27,55 @@ function loadProducts(subcategoryId, subcategoryName) {
         });
 }
 
+function openProductModal(productId) {
+    const modalLabel = document.getElementById('productModalLabel');
+    const modalBody = document.querySelector('#productModal .modal-body');
+    
+    modalLabel.textContent = 'Cargando...';
+    modalBody.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Cargando...</span></div></div>';
+    
+    $('#productModal').modal('show');
+
+    fetch(`controllers/get_product_details.php?id=${productId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(product => {
+            if (product.error) {
+                throw new Error(product.error);
+            }
+            
+            modalLabel.textContent = product.name || 'Producto';
+            modalBody.innerHTML = `
+            <div class="product-details">
+                ${product.images && product.images.length > 0 
+                    ? `<img src="${product.images[0]}" alt="${product.name}" class="img-fluid mb-3">`
+                    : '<img src="img/no-image.jpg" alt="No imagen disponible" class="img-fluid mb-3">'}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name || 'Producto'}</h5>
+                        <p class="card-text description">${product.description || 'Sin descripción'}</p>
+                        <p class="price"><strong>Precio:</strong> $${parseFloat(product.price).toFixed(2)}</p>
+                        <p class="stock"><strong>Stock:</strong> ${product.stock || 0}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            modalLabel.textContent = 'Error';
+            modalBody.innerHTML = `
+                <div class="alert alert-danger">
+                    Error al cargar los detalles del producto: ${error.message}
+                </div>
+            `;
+        });
+}
 
 function displayProducts(products, subcategoryName) {
     const productContainer = document.getElementById('product-container');
@@ -53,9 +102,9 @@ function displayProducts(products, subcategoryName) {
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="detail.php?id=${product.id}" class="btn btn-sm text-dark p-0">
+                    <button onclick="openProductModal(${product.id})" class="btn btn-sm text-dark p-0">
                         <i class="fas fa-eye text-primary mr-1"></i>Ver Detalle
-                    </a>
+                    </button>
                     <button onclick="addToCart(${product.id})" class="btn btn-sm text-dark p-0" ${product.stock > 0 ? '' : 'disabled'}>
                         <i class="fas fa-shopping-cart text-primary mr-1"></i>
                         ${product.stock > 0 ? 'Agregar al Carrito' : 'Sin Stock'}
@@ -102,31 +151,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Escuchar clics en categorías y subcategorías de forma dinámica
-        document.querySelector('.border-bottom').addEventListener('click', function(e) {
-            // Prevenir el comportamiento por defecto de los enlaces
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts(null, 'Todos los productos');
+    
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', (e) => {
             e.preventDefault();
-
-            // Verificar si el elemento tiene un data-category-id o data-subcategory-id
-            var categoryId = e.target.getAttribute('data-category-id');
-            var subcategoryId = e.target.getAttribute('data-subcategory-id');
-
-            if (categoryId) {
-                // Filtrar por categoría
-                filterProducts('category', categoryId);
-            } else if (subcategoryId) {
-                // Filtrar por subcategoría
-                filterProducts('subcategory', subcategoryId);
-            }
+            const subcategoryId = e.target.dataset.subcategoryId;
+            const subcategoryName = e.target.textContent.trim();
+            loadProducts(subcategoryId, subcategoryName);
         });
+    });
 
-        // Función para realizar la solicitud y actualizar los productos
+    document.querySelector('.border-bottom').addEventListener('click', function(e) {
+        e.preventDefault();
+        var categoryId = e.target.getAttribute('data-category-id');
+        var subcategoryId = e.target.getAttribute('data-subcategory-id');
+
+        if (categoryId) {
+            filterProducts('category', categoryId);
+        } else if (subcategoryId) {
+            filterProducts('subcategory', subcategoryId);
+        }
+    });
+
         function filterProducts(type, id) {
             fetch(`filter-products.php?type=${type}&id=${id}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);  // Verificar qué datos llegan del servidor
+                    console.log(data);
                     if (data.error) {
                         console.error('Error en el servidor:', data.error);
                         return;
@@ -135,14 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.error('Los datos no son un arreglo válido');
                         return;
                     }
-                    updateProductList(data); // Actualizar la lista de productos
+                    updateProductList(data);
                 })
                 .catch(error => {
                     console.error('Error al filtrar productos:', error);
                 });
         }
 
-        // Función para actualizar la lista de productos en el DOM
         function updateProductList(products) {
             var productContainer = document.getElementById('product-container');
             if (!productContainer) {
@@ -155,7 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Generar el HTML de los productos
             var productsHtml = products.map(product => `
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1 product-item"
                     data-category-id="${product.category_id || ''}"
@@ -183,6 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `).join('');
 
-            productContainer.innerHTML = productsHtml; // Reemplazar el HTML con los nuevos productos
+            productContainer.innerHTML = productsHtml;
         }
     });
