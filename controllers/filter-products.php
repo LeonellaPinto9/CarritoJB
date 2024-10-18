@@ -1,5 +1,5 @@
 <?php
-require 'config/db_connect.php';
+require '../config/db_connect.php';
 
 $type = $_GET['type'] ?? '';
 $id = $_GET['id'] ?? '';

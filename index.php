@@ -31,6 +31,9 @@
     <link href="assets/css/product-item-img.css" rel="stylesheet">
 </head>
 
+<!-- ProductManager -->
+<?php include('controllers/ProductManager.php'); ?>
+
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
@@ -143,7 +146,6 @@
         <div class="row px-xl-5">
             <!-- Shop Sidebar Start -->
             <div class="col-lg-3 col-md-12">
-                <!-- CATEGORIAS -->
                 <div class="border-bottom mb-4 pb-4">
                     <h5 class="font-weight-semi-bold mb-4">CATEGORIAS</h5>
                     <form>
@@ -170,7 +172,7 @@
                         <?php endforeach; ?>
                     </form>
                 </div>
-
+                </form>
 
 
                 <!-- ETIQUETAS -->
@@ -189,6 +191,8 @@
             </div>
             <!-- Shop Sidebar End -->
 
+            <!-- Shop Sidebar End -->
+
             <!-- Shop Product Start -->
             <div class="col-lg-9 col-md-12">
                 <div class="row pb-3">
@@ -197,46 +201,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="row pb-3" id="product-container">
-                    <?php if (!empty($products)): ?>
-                        <?php foreach ($products as $product): ?>
-                            <div class="col-lg-4 col-md-6 col-sm-12 pb-1 product-item"
-                                data-category-id="<?= isset($product['category_id']) ? $product['category_id'] : '' ?>"
-                                data-subcategory-id="<?= isset($product['subcategory_id']) ? $product['subcategory_id'] : '' ?>">
-                                <div class="card product-item border-0 mb-4">
-                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                        <?= error_log(htmlspecialchars($product['image_url'] ?? '')) ?>
-                                        <img class="img-fluid w-100" src="<?= htmlspecialchars($product['image_url'] ?? '') ?>" alt="<?= htmlspecialchars($product['name'] ?? '') ?>">
-                                    </div>
-                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                        <h6 class="text-truncate mb-3"><?= htmlspecialchars($product['name'] ?? '') ?></h6>
-                                        <!-- <div><span><?= htmlspecialchars($product['description'] ?? '') ?></span></div> -->
-                                        <div class="d-flex justify-content-center">
-                                            <h6>$<?= number_format($product['price'] ?? 0, 2) ?></h6>
-                                            <?php if (!empty($product['original_price'])): ?>
-                                                <h6 class="text-muted ml-2"><del>$<?= number_format($product['original_price'], 2) ?></del></h6>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-between bg-light border">
-                                        <a class="btn btn-sm text-dark p-0 view-detail-btn" data-product-id="<?= $product['id_product'] ?? '' ?>">
-                                            <i class="fas fa-eye text-primary mr-1"></i>View Detail
-                                        </a>
-                                        <a href="#" class="btn btn-sm text-dark p-0 add-to-cart" data-product-id="<?= $product['id'] ?? '' ?>"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="col-12">
-                            <p>No se Encontraron los Productos.</p>
-                        </div>
-                    <?php endif; ?>
+
+                <!-- Título de la sección actual -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 id="current-section" class="text-center">Todos los productos</h2>
+                    </div>
+                </div>
+                <!-- Spinner de carga -->
+                <div id="loading-spinner" class="d-none text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                    </div><br><br>
+                    <span class="visually-hidden">Cargando...</span>
                 </div>
 
+                <div id="product-container" class="row">
+
+                </div>
             </div>
         </div>
+    </div>
 
+    </div>
+    </div>
+    <!-- Shop Product End -->
+    </div>
+    </div>
     </div>
     </div>
     <!-- Shop Product End -->
