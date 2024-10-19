@@ -63,6 +63,32 @@ body {
   text-align: left;
   background-color: #fff;
 }
+/*ESTILOS PARA LAS CARD DE LOS PRODUCTOS*/
+.product-name {
+  color: black;
+}
+
+.product-price {
+  color: gray; /* Puedes ajustar el tono de gris según sea necesario */
+}
+
+.label-filter.active {
+  opacity: 0.8;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.product-item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.product-item .price {
+  font-weight: bold;
+  color: #000;
+}
+/**/
 
 [tabindex="-1"]:focus:not(:focus-visible) {
   outline: 0 !important;

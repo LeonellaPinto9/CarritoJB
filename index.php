@@ -176,11 +176,14 @@
 
 
                 <!-- ETIQUETAS -->
+                <!-- Modificar tu HTML actual para incluir un contenedor para los productos -->
                 <div class="border-bottom mb-4 pb-4">
                     <h5 class="font-weight-semi-bold mb-4">ETIQUETAS</h5>
-                    <div>
+                    <div class="labels-container">
                         <?php foreach ($labels as $label): ?>
-                            <a href="#" class="btn mb-1 mr-1" data-label-id="<?= htmlspecialchars($label['id']) ?>" style="background-color: <?= htmlspecialchars($label['color']) ?>; color: #fff;">
+                            <a href="#" class="btn mb-1 mr-1 label-filter"
+                                data-label-id="<?= htmlspecialchars($label['id']) ?>"
+                                style="background-color: <?= htmlspecialchars($label['color']) ?>; color: #fff;">
                                 <?= htmlspecialchars($label['name']) ?>
                             </a>
                         <?php endforeach; ?>
@@ -234,32 +237,32 @@
     </div>
     <!-- Shop End -->
 
-<style>
+    <style>
 
-</style>
+    </style>
     <!-- Footer Start -->
     <?php include('views/footer.html'); ?>
     <!-- Footer End -->
 
     <!-- Modal Detalles Producto -->
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="productModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- El contenido del producto se insertará aquí -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- El contenido del producto se insertará aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <!-- Modal Detalles Producto End -->
 
     <!--FILTRADO DE PRODUCTOS -->
@@ -283,6 +286,7 @@
 
     <!-- JS -->
     <script src="assets/js/index.js"></script>
+    <script src="assets/js/labels.js"></script>
 </body>
 
 </html>

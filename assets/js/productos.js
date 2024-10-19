@@ -126,17 +126,6 @@ function showError(message) {
     `;
 }
 
-function showMessage(message) {
-    const productContainer = document.getElementById('product-container');
-    productContainer.innerHTML = `
-        <div class="col-12">
-            <div class="alert alert-info text-center">
-                ${message}
-            </div>
-        </div>
-    `;
-}
-
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts(null, 'Todos los productos');
